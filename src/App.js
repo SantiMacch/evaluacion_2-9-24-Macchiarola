@@ -2,10 +2,28 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
+  const [frase, setFrase] = useState('')
+  const [busca, setBusca] = useState('')
 
-  const [term, setTerm] = useState("")
+  const obtenerfrase = () =>{
+    fetch(`https://api.adviceslip.com/advice`)
+    .then(response => response.json())
+    .then(data => setBusca(data))
+    .catch(error => console.error(error))
 
-  const handleTermChange = (event) => setTerm(event.target.value);
+  }
+
+  const buscarfrase = () =>{
+    fetch(`https://api.adviceslip.com/advice/${frase}`)
+    .then(response => response.json())
+    .then(data => setBusca(data))
+    .catch(error => console.error(error))
+
+    }
+    
+  const handleTermChange = (event) => {
+    setFrase(event.target.value);
+    }
 
   return (
     <main>
@@ -15,16 +33,18 @@ function App() {
 
       <div>
         <h2>Obtener un consejo aleatorio</h2>
-        <button>Obtener</button>
-        <p className="result-box"></p>
+        <button onClick={obtenerfrase}>Obtener</button>
+        <p className="result-box">{frase.slip.advice}</p>
       </div>
 
       <div>
         <h2>Buscar un consejo</h2>
         <input type="text" onChange={handleTermChange} />
-        <button>Enviar</button>
+        <button onClick={buscarfrase}>Enviar</button>
         <h3>Resultados de búsqueda:</h3>
-        <p className="result-box"></p>
+        <ul className="result-box">
+          {busca.map((busca,id) => <li key={id}>{busca.slip.advice}</li>)}
+        </ul>
       </div>
 
     </main>
